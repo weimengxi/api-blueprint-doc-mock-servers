@@ -18,7 +18,7 @@
   "author": "g-bbfe",
   "license": "ISC",
   "dependencies": {
-
+    "drakov": "^1.0.4"
   },
   "devDependencies": {
     "browser-sync": "^2.18.13",

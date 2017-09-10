@@ -10,6 +10,8 @@ var changed = require('gulp-changed');
 var plumber = require('gulp-plumber');
 var aglio = require('gulp-aglio');
 
+var drakov = require('drakov');
+
 var browserSync = require('browser-sync').create();
 const reload = browserSync.reload;
 
@@ -23,12 +25,27 @@ const Config = {
     },
     // broswersync-config
     serve: {
-        server: {
-            baseDir: "./"
+        docServer: {
+            port: 3000,
+            server: {
+                baseDir: "./"
+            }
+        },
+        mockServer: {
+            //https://github.com/Aconex/drakov/issues/16
+            sourceFiles: "./docs/**/*.{md,apib}",
+            serverPort: 3002,
+            // staticPaths: [
+            //     '/path/to/static/files',
+            //     '/another/path/to/static/files',
+            //     '/path/to/more/files=/mount/it/here'
+            // ],
+            stealthmode: true
         }
-
     }
 }
+
+
 
 const CACHE_KEYS = {
     TRANSPILING: 'transpile-api-blueprint-docs',
@@ -162,10 +179,11 @@ gulp.task('transpile', gulp.series(function transpile() {
 
 gulp.task("serve", gulp.series(function serve(done) {
     // modify some webpack config options
-    browserSync.init(Config.serve);
+    browserSync.init(Config.serve.docServer);
+    drakov.run(Config.serve.mockServer);
     done();
-
 }));
+
 
 gulp.task("inject", gulp.series(injectTranspiledDocs))
 
