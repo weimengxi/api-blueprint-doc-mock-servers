@@ -1,0 +1,33 @@
+{
+  "name": "api-blueprint-doc-mock-servers",
+  "version": "0.0.1",
+  "description": "it's an service which provides document-server and mock-server based on api-blueprint files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weimengxi/api-blueprint-doc-mock-servers.git"
+  },
+  "keywords": [
+    "api-blueprint",
+    "document-server",
+    "mock-server"
+  ],
+  "author": "g-bbfe",
+  "license": "ISC",
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.13",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-aglio": "0.0.10",
+    "gulp-cached": "^1.1.1",
+    "gulp-changed": "3.1.0",
+    "gulp-inject": "^4.2.0",
+    "gulp-plumber": "1.1.0",
+    "gulp-util": "3.0.8"
+  }
+}
