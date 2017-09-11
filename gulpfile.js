@@ -53,10 +53,13 @@ const CACHE_KEYS = {
 }
 
 const AglioOptions = {
+    theme: 'default',
+    themeFullWidth: true,
+    themeTemplate: 'triple',
     includePath: path.posix.join(PrjRoot, Config.dirs.src)
 };
 
-const transpileBluePrint = function transpileBluePrint(globs, options = {}, dist = Config.dirs.dist) {
+const transpileBluePrint = function transpileBluePrint(globs, options = AglioOptions, dist = Config.dirs.dist) {
     let transpilePromise = new Promise((resolve, reject) => {
         gulp.src(globs, { base: Config.dirs.src })
             .pipe(plumber(function rejector(err) {
@@ -123,6 +126,17 @@ const del = function del(globs) {
     return delPromise
 }
 
+const serveDocs = function serveDocs(done) {
+    browserSync.init(Config.serve.docServer);
+    done();
+}
+
+const serveMocks = function serveDocs(done) {
+    // @TODO 
+    drakov.run(Config.serve.mockServer);
+    done();
+}
+
 gulp.task('clean', gulp.series(function cleanDistDir() {
     let globs = path.posix.join(PrjRoot, Config.dirs.dist, '/**/*');
     let cleanPromise = del(globs).then(() => {
@@ -177,14 +191,10 @@ gulp.task('transpile', gulp.series(function transpile() {
     return transpileBluePrint(globs, AglioOptions);
 }));
 
-gulp.task("serve", gulp.series(function serve(done) {
-    // modify some webpack config options
-    browserSync.init(Config.serve.docServer);
-    drakov.run(Config.serve.mockServer);
-    done();
-}));
+gulp.task("inject", gulp.series(injectTranspiledDocs));
 
-
-gulp.task("inject", gulp.series(injectTranspiledDocs))
+gulp.task("serve::docs", gulp.series(serveDocs));
+gulp.task("serve::mocks", gulp.series(serveMocks));
+gulp.task("serve", gulp.parallel('serve::docs', 'serve::mocks'));
 
 gulp.task('default', gulp.series('clean', 'transpile', gulp.parallel('watch', 'inject'), 'serve'))
